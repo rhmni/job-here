@@ -13,6 +13,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    # Third Party Apps
+    'rest_framework',
+    'drf_yasg',
+
+    # Local Apps
     'app_account.apps.AppAccountConfig',
     'app_employee.apps.AppEmployeeConfig',
 ]
