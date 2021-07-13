@@ -8,6 +8,7 @@ class UserRegisterSerializer(serializers.Serializer):
     email = serializers.EmailField()
     name = serializers.CharField(max_length=150)
     password = serializers.CharField()
+    is_employer = serializers.BooleanField(default=False)
 
     def validate_password(self, password):
         if len(password) < 8:

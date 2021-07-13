@@ -20,6 +20,7 @@ INSTALLED_APPS = [
     # Local Apps
     'app_account.apps.AppAccountConfig',
     'app_employee.apps.AppEmployeeConfig',
+    'app_company.apps.AppCompanyConfig',
 ]
 
 MIDDLEWARE = [

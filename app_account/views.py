@@ -7,6 +7,8 @@ from rest_framework.response import Response
 from app_account.models import User
 from app_account.serializers import UserRegisterSerializer
 from app_account.token import account_activation_token
+from app_company.models import Company
+from app_employee.models import Employee
 from permissions import IsAnonymoused
 
 from django.contrib.sites.shortcuts import get_current_site
@@ -31,11 +33,12 @@ class UserRegisterView(GenericAPIView):
         if srz_data.is_valid(raise_exception=True):
             data = srz_data.validated_data
 
-            user, _ = User.objects.get_or_create(
+            user, created = User.objects.get_or_create(
                 name=data['name'],
                 email=data['email'],
                 password=data['password'],
             )
+            user.is_employer = data['is_employer']
             user.is_active = False
             user.save()
 
@@ -70,6 +73,10 @@ class ActivateUserView(GenericAPIView):
             user.is_active = True
             user.join_date = datetime.now()
             user.save()
+            if user.is_employer:
+                Company.objects.create(user=user)
+            else:
+                Employee.objects.create(user=user)
             return Response(data={'message': 'your account now is active'})
         else:
             return Response(data={'message': 'this link is expired'})
