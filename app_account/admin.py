@@ -15,7 +15,7 @@ class UserAdmin(BaseUserAdmin):
         ('Security information', {'fields': ('email', 'phone', 'password')}),
         ('Personal info', {'fields': ('name', 'age', 'gender')}),
         ('Permissions', {'fields': ('is_superuser', 'is_active', 'is_employer')}),
-        ('Important date', {'fields': ('last_login', 'register_date')}),
+        ('Important date', {'fields': ('last_login', 'join_date')}),
     )
 
     add_fieldsets = (

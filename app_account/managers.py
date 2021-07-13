@@ -1,5 +1,7 @@
 from django.contrib.auth.base_user import BaseUserManager
 
+from app_account import models
+
 
 class UserManager(BaseUserManager):
     def create_user(self, name, email, password=None):
@@ -27,5 +29,15 @@ class UserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-
-
+    def get_or_create(self, name, email, password=None):
+        try:
+            user = models.User.objects.get(email=email)
+            created = False
+        except models.User.DoesNotExist:
+            user = self.create_user(
+                name=name,
+                password=password,
+                email=email,
+            )
+            created = True
+        return user, created
