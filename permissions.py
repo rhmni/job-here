@@ -21,3 +21,14 @@ class IsEmployee(BasePermission):
 
     def has_permission(self, request, view):
         return bool(request.user.is_authenticated and request.user.is_active and not request.user.is_company)
+
+
+class IsCompany(BasePermission):
+    """
+        Allows access only to users that are founder of company.
+    """
+
+    message = 'permission denied, you not a founder of company'
+
+    def has_permission(self, request, view):
+        return bool(request.user.is_authenticated and request.user.is_active and request.user.is_company)
