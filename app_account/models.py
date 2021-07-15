@@ -24,7 +24,7 @@ class User(AbstractBaseUser):
     name = models.CharField(max_length=150)
     age = models.PositiveSmallIntegerField(null=True, blank=True)
     join_date = models.DateTimeField(null=True, blank=True)
-    is_employer = models.BooleanField(default=False)
+    is_company = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     is_superuser = models.BooleanField(default=False)
 

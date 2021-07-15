@@ -73,7 +73,7 @@ class ActivateUserView(GenericAPIView):
             user.is_active = True
             user.join_date = datetime.now()
             user.save()
-            if user.is_employer:
+            if user.is_company:
                 Company.objects.create(user=user)
             else:
                 Employee.objects.create(user=user)

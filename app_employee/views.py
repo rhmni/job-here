@@ -1,3 +1,41 @@
-from django.shortcuts import render
+from rest_framework.generics import GenericAPIView
+from rest_framework.response import Response
 
-# Create your views here.
+from app_employee import serializers
+from permissions import IsEmployee
+
+
+class RetrieveEmployeeView(GenericAPIView):
+    """
+        show data of employee for himself
+    """
+
+    serializer_class = serializers.RetrieveUpdateEmployeeSerializer
+
+    permission_classes = (
+        IsEmployee,
+    )
+
+    def get(self, request):
+        srz_data = self.serializer_class(instance=request.user.employee)
+        return Response(srz_data.data)
+
+
+class UpdateEmployeeView(GenericAPIView):
+    """
+        update employee date
+    """
+
+    serializer_class = serializers.RetrieveUpdateEmployeeSerializer
+
+    permission_classes = (
+        IsEmployee,
+    )
+
+    def patch(self, request):
+        srz_data = self.serializer_class(instance=request.user.employee, data=request.data, partial=True)
+        if srz_data.is_valid(raise_exception=True):
+            srz_data.save()
+            return Response({'message': 'updated success'})
+
+

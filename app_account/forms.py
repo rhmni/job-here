@@ -43,5 +43,5 @@ class UserChangeForm(forms.ModelForm):
             'email',
             'phone',
             'age',
-            'is_employer',
+            'is_company',
         )

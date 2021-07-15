@@ -30,7 +30,7 @@ class Employee(models.Model):
         on_delete=models.CASCADE,
         limit_choices_to={
             'is_active': True,
-            'is_employer': False,
+            'is_company': False,
         }
     )
     marital_status = models.CharField(
