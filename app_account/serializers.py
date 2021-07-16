@@ -8,7 +8,7 @@ class UserRegisterSerializer(serializers.Serializer):
     email = serializers.EmailField()
     name = serializers.CharField(max_length=150)
     password = serializers.CharField()
-    is_employer = serializers.BooleanField(default=False)
+    is_company = serializers.BooleanField(default=False)
 
     def validate_password(self, password):
         if len(password) < 8:
@@ -29,6 +29,17 @@ class UserRegisterSerializer(serializers.Serializer):
         return password
 
     def validate_email(self, email):
+        user = User.objects.filter(email=email)
+        if user.exists() and user[0].is_active:
+            raise ValidationError('this field must be unique')
+        return email
+
+
+class UserChangeEmailSerializer(serializers.Serializer):
+    new_email = serializers.EmailField()
+    password = serializers.CharField()
+
+    def validate_new_email(self, email):
         user = User.objects.filter(email=email)
         if user.exists() and user[0].is_active:
             raise ValidationError('this field must be unique')

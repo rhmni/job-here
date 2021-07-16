@@ -39,7 +39,7 @@ ROOT_URLCONF = 'Config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -120,3 +120,14 @@ SWAGGER_SETTINGS = {
         }
     },
 }
+
+# Redis Config
+REDIS_HOST = config('REDIS_HOST', default='localhost')
+REDIS_PORT = config('REDIS_PORT', cast=int, default=6379)
+
+# Redis DB Numbers
+REDIS_CHANGE_EMAIL_DB = 1
+
+# Rabbitmq Config
+CELERY_BROKER_URL = config('CELERY_BROKER_URL', default='amqp://guest:guest@localhost')
+CELERY_RESULT_BACKEND = config('CELERY_RESULT_BACKEND', default='rpc://')
