@@ -1,11 +1,14 @@
 from datetime import datetime
 
-import redis
 from django.conf import settings
 from django.contrib.sites.shortcuts import get_current_site
+from django.utils.encoding import force_text
+from django.utils.http import urlsafe_base64_decode
+
 from rest_framework.generics import GenericAPIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
+import redis
 
 from app_account.models import User
 from app_account.serializers import UserRegisterSerializer, UserChangeEmailSerializer
@@ -15,8 +18,7 @@ from app_company.models import Company
 from app_employee.models import Employee
 from permissions import IsAnonymoused
 
-from django.utils.encoding import force_text
-from django.utils.http import urlsafe_base64_decode
+
 
 
 class UserRegisterView(GenericAPIView):
@@ -68,7 +70,7 @@ class ActivateUserView(GenericAPIView):
 
 class ChangeEmailView(GenericAPIView):
     """
-        get user data and send email for activate user account
+        get user data and send email for change email of user
     """
 
     serializer_class = UserChangeEmailSerializer
@@ -91,7 +93,7 @@ class ChangeEmailView(GenericAPIView):
 
 class VerifyChangeEmailView(GenericAPIView):
     """
-        get link and activate user
+        get link and change email of user
     """
 
     permission_classes = (
@@ -99,16 +101,22 @@ class VerifyChangeEmailView(GenericAPIView):
     )
 
     def get(self, request, uidb64, token):
+
         try:
             uid = force_text(urlsafe_base64_decode(uidb64))
             user = User.objects.get(pk=uid)
         except(TypeError, ValueError, OverflowError, User.DoesNotExist):
             user = None
+
         if user is not None and account_change_email_token.check_token(user, token):
             redis_con = redis.Redis(host=settings.REDIS_HOST, port=settings.REDIS_PORT, db=settings.REDIS_CHANGE_EMAIL_DB)
-            email = redis_con.get(user.pk).decode('utf-8')
-            user.email = email
-            user.save()
-            return Response(data={'message': 'your email changed'})
-        else:
-            return Response(data={'message': 'this link is expired'})
+            if redis_con.exists(user.pk):
+                email = redis_con.get(user.pk).decode('utf-8')
+                if not User.objects.filter(email=email).exists():
+                    user.email = email
+                    user.save()
+                    redis_con.expire(user.pk, 1)
+                    return Response(data={'message': 'your email changed'})
+                else:
+                    return Response(data={'message': 'user with this email already exists'})
+        return Response(data={'message': 'this link is expired'})
