@@ -1,6 +1,8 @@
 from django.conf import settings
 from django.db import models
 
+from app_option.models import Technology, MinSalary, City
+
 
 class Employee(models.Model):
     JOB_STATUS = (
@@ -62,11 +64,31 @@ class Employee(models.Model):
     avatar = models.ImageField(default='default_employee_avatar.jpg')
     about_me = models.TextField(null=True, blank=True)
 
-    # add later
-    # todo :techs_for_work
-    # todo :cities_for_work
-    # todo :min_salary
-    # todo :city
+    techs_for_work = models.ManyToManyField(
+        to=Technology,
+        related_name='employees',
+        blank=True,
+    )
+    cities_for_work = models.ManyToManyField(
+        to=City,
+        related_name='employees_for_work',
+        blank=True,
+    )
+
+    min_salary = models.ForeignKey(
+        to=MinSalary,
+        on_delete=models.SET_NULL,
+        related_name='employees',
+        null=True,
+        blank=True,
+    )
+    city = models.ForeignKey(
+        to=City,
+        on_delete=models.SET_NULL,
+        related_name='employees',
+        null=True,
+        blank=True,
+    )
 
     def __str__(self):
         return self.user.name

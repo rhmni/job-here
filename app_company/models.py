@@ -1,13 +1,7 @@
 from django.conf import settings
 from django.db import models
 
-
-class Category(models.Model):
-    title = models.CharField(max_length=100, unique=True)
-    slug = models.SlugField(max_length=100, unique=True)
-
-    def __str__(self):
-        return self.title
+from app_option.models import City, Technology, Category
 
 
 class Company(models.Model):
@@ -24,7 +18,7 @@ class Company(models.Model):
         on_delete=models.CASCADE,
         limit_choices_to={
             'is_active': True,
-            'is_employer': True,
+            'is_company': True,
         }
     )
     category = models.ForeignKey(
@@ -32,6 +26,18 @@ class Company(models.Model):
         on_delete=models.SET_NULL,
         related_name='companies',
         null=True,
+        blank=True,
+    )
+    city = models.ForeignKey(
+        to=City,
+        on_delete=models.SET_NULL,
+        related_name='companies',
+        null=True,
+        blank=True,
+    )
+    technologies = models.ManyToManyField(
+        to=Technology,
+        related_name='companies',
         blank=True,
     )
     title = models.CharField(max_length=100, unique=True, null=True, blank=True)
@@ -43,8 +49,6 @@ class Company(models.Model):
     number_of_employees = models.CharField(max_length=150, choices=NUMBER_OF_EMPLOYEES, null=True, blank=True)
     address = models.CharField(max_length=200, null=True, blank=True)
     about_us = models.TextField(null=True, blank=True)
-
-    # todo : techs
 
     def __str__(self):
         return self.user.name
