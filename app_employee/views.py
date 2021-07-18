@@ -40,3 +40,39 @@ class UpdateEmployeeView(GenericAPIView):
             return Response({'message': 'updated success'}, status=status.HTTP_204_NO_CONTENT)
 
 
+class TechnologyAddView(GenericAPIView):
+    """
+        add one or more technology to employee
+    """
+
+    serializer_class = serializers.TechnologyAddDeleteSerializer
+    permission_classes = (
+        IsEmployee,
+    )
+
+    def patch(self, request):
+        srz_data = self.serializer_class(data=request.data)
+        if srz_data.is_valid(raise_exception=True):
+            employee = request.user.employee
+            techs = srz_data.validated_data['techs']
+            employee.techs_for_work.add(*techs)
+            return Response({'message': 'added success'}, status=status.HTTP_200_OK)
+
+
+class TechnologyDeleteView(GenericAPIView):
+    """
+        delete one or more technology from employee
+    """
+
+    serializer_class = serializers.TechnologyAddDeleteSerializer
+    permission_classes = (
+        IsEmployee,
+    )
+
+    def patch(self, request):
+        srz_data = self.serializer_class(data=request.data)
+        if srz_data.is_valid(raise_exception=True):
+            employee = request.user.employee
+            techs = srz_data.validated_data['techs']
+            employee.techs_for_work.remove(*techs)
+            return Response({'message': 'deleted success'}, status=status.HTTP_200_OK)

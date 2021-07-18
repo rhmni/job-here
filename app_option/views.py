@@ -1,3 +1,24 @@
-from django.shortcuts import render
+from rest_framework import status
+from rest_framework.generics import GenericAPIView
+from rest_framework.permissions import AllowAny
+from rest_framework.response import Response
 
-# Create your views here.
+from app_option import serializers
+from app_option.models import Technology
+
+
+class TechnologyListView(GenericAPIView):
+    """
+        show list of available technologies
+    """
+
+    serializer_class = serializers.TechnologyListSerializer
+
+    permission_classes = (
+        AllowAny,
+    )
+
+    def get(self, request):
+        technologies = Technology.objects.all()
+        srz_data = self.serializer_class(instance=technologies, many=True)
+        return Response(data=srz_data.data, status=status.HTTP_200_OK)
