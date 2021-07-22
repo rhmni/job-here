@@ -44,3 +44,14 @@ class UserChangeEmailSerializer(serializers.Serializer):
         if user.exists() and user[0].is_active:
             raise ValidationError('this field must be unique')
         return email
+
+
+class UserProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = (
+            'gender',
+            'phone',
+            'name',
+            'age',
+        )

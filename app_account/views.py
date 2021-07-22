@@ -4,6 +4,7 @@ from django.conf import settings
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.encoding import force_text
 from django.utils.http import urlsafe_base64_decode
+from rest_framework import status
 
 from rest_framework.generics import GenericAPIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
@@ -11,14 +12,12 @@ from rest_framework.response import Response
 import redis
 
 from app_account.models import User
-from app_account.serializers import UserRegisterSerializer, UserChangeEmailSerializer
+from app_account.serializers import UserRegisterSerializer, UserChangeEmailSerializer, UserProfileSerializer
 from app_account.tasks import send_activate_user_email, send_change_password_email
 from app_account.token import account_activation_token, account_change_email_token
 from app_company.models import Company
 from app_employee.models import Employee
 from permissions import IsAnonymoused
-
-
 
 
 class UserRegisterView(GenericAPIView):
@@ -120,3 +119,37 @@ class VerifyChangeEmailView(GenericAPIView):
                 else:
                     return Response(data={'message': 'user with this email already exists'})
         return Response(data={'message': 'this link is expired'})
+
+
+class UserProfileView(GenericAPIView):
+    """
+        show profile of user
+    """
+
+    serializer_class = UserProfileSerializer
+
+    permission_classes = (
+        IsAuthenticated,
+    )
+
+    def get(self, request):
+        srz_data = self.serializer_class(instance=request.user)
+        return Response(srz_data.data, status=status.HTTP_200_OK)
+
+
+class UserProfileUpdateView(GenericAPIView):
+    """
+        update profile of user
+    """
+
+    serializer_class = UserProfileSerializer
+
+    permission_classes = (
+        IsAuthenticated,
+    )
+
+    def patch(self, request):
+        srz_data = self.serializer_class(instance=request.user, data=request.data)
+        if srz_data.is_valid(raise_exception=True):
+            srz_data.save()
+            return Response(data={'message': 'profile updated'}, status=status.HTTP_200_OK)
