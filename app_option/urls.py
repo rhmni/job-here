@@ -5,4 +5,5 @@ from app_option import views
 app_name = 'options'
 urlpatterns = [
     path('technologies/', views.TechnologyListView.as_view(), name='list_technologies'),
+    path('cities/', views.CityListView.as_view(), name='list_cities'),
 ]

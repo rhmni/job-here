@@ -76,3 +76,41 @@ class TechnologyDeleteView(GenericAPIView):
             techs = srz_data.validated_data['techs']
             employee.techs_for_work.remove(*techs)
             return Response({'message': 'deleted success'}, status=status.HTTP_200_OK)
+
+
+class CityAddView(GenericAPIView):
+    """
+        add one or more city from employee
+    """
+
+    serializer_class = serializers.CityAddDeleteSerializer
+    permission_classes = (
+        IsEmployee,
+    )
+
+    def patch(self, request):
+        srz_data = self.serializer_class(data=request.data)
+        if srz_data.is_valid(raise_exception=True):
+            employee = request.user.employee
+            cities = srz_data.validated_data['cities']
+            employee.cities_for_work.add(*cities)
+            return Response({'message': 'added success'}, status=status.HTTP_200_OK)
+
+
+class CityDeleteView(GenericAPIView):
+    """
+        delete one or more city from employee
+    """
+
+    serializer_class = serializers.CityAddDeleteSerializer
+    permission_classes = (
+        IsEmployee,
+    )
+
+    def patch(self, request):
+        srz_data = self.serializer_class(data=request.data)
+        if srz_data.is_valid(raise_exception=True):
+            employee = request.user.employee
+            cities = srz_data.validated_data['cities']
+            employee.cities_for_work.remove(*cities)
+            return Response({'message': 'deleted success'}, status=status.HTTP_200_OK)
