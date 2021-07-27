@@ -24,17 +24,6 @@ class RetrieveUpdateEmployeeSerializer(serializers.ModelSerializer):
         )
 
 
-class TechnologyAddDeleteSerializer(serializers.Serializer):
-    techs = serializers.ListField()
-
-    def validate_techs(self, techs):
-        if not all([(tech.isnumeric()) for tech in techs]):
-            raise ValidationError('all techs is not int')
-        if len(techs) != Technology.objects.filter(pk__in=techs).count():
-            raise ValidationError('some techs is not exists')
-        return techs
-
-
 class CityAddDeleteSerializer(serializers.Serializer):
     cities = serializers.ListField()
 

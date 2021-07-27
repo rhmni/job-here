@@ -11,13 +11,17 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 import redis
 
+from permissions import IsAnonymoused
+from app_employee.models import Employee
+from app_company.models import Company
 from app_account.models import User
-from app_account.serializers import UserRegisterSerializer, UserChangeEmailSerializer, UserProfileSerializer
 from app_account.tasks import send_activate_user_email, send_change_password_email
 from app_account.token import account_activation_token, account_change_email_token
-from app_company.models import Company
-from app_employee.models import Employee
-from permissions import IsAnonymoused
+from app_account.serializers import (
+    UserRegisterSerializer,
+    UserChangeEmailSerializer,
+    UserProfileSerializer,
+)
 
 
 class UserRegisterView(GenericAPIView):

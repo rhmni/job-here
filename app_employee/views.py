@@ -3,6 +3,7 @@ from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 
 from app_employee import serializers
+from app_option.serializers import TechnologyAddDeleteSerializer
 from permissions import IsEmployee
 
 
@@ -45,7 +46,7 @@ class TechnologyAddView(GenericAPIView):
         add one or more technology to employee
     """
 
-    serializer_class = serializers.TechnologyAddDeleteSerializer
+    serializer_class = TechnologyAddDeleteSerializer
     permission_classes = (
         IsEmployee,
     )
@@ -64,7 +65,7 @@ class TechnologyDeleteView(GenericAPIView):
         delete one or more technology from employee
     """
 
-    serializer_class = serializers.TechnologyAddDeleteSerializer
+    serializer_class = TechnologyAddDeleteSerializer
     permission_classes = (
         IsEmployee,
     )
