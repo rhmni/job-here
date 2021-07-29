@@ -78,7 +78,7 @@ class Job(models.Model):
     min_degree = models.CharField(max_length=100, choices=MIN_DEGREE)
     description = models.TextField()
     register_date = models.DateTimeField()
-    is_expire = models.BooleanField(default=True)
+    is_expire = models.BooleanField(default=False)
 
     objects = models.Manager()
     actived = ActiveJobsManager()

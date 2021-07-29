@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.conf import settings
 from django.core.cache import cache
 
@@ -7,7 +9,8 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
 from app_job.models import Job
-from app_job.serializers import JobListSerializer, JobRetrieveSerializer
+from app_job.serializers import JobListSerializer, JobRetrieveSerializer, JobCreateUpdateSerializer
+from permissions import IsCompany
 
 
 class JobListView(ListAPIView):
@@ -50,3 +53,50 @@ class JobRetrieveView(GenericAPIView):
         job = get_object_or_404(jobs, pk=job_id)
         srz_data = self.serializer_class(instance=job)
         return Response(data=srz_data.data, status=status.HTTP_200_OK)
+
+
+class JobCreateView(GenericAPIView):
+    """
+        create new job for company users
+    """
+
+    serializer_class = JobCreateUpdateSerializer
+    permission_classes = (
+        IsCompany,
+    )
+
+    def post(self, request):
+        srz_data = self.serializer_class(data=request.data)
+        if srz_data.is_valid(raise_exception=True):
+            srz_data.save(
+                company=request.user.company,
+                register_date=datetime.now(),
+            )
+            return Response(data={'message': 'job created success'}, status=status.HTTP_200_OK)
+
+
+class JobUpdateView(GenericAPIView):
+    """
+        create new job for company users
+    """
+
+    serializer_class = JobCreateUpdateSerializer
+    permission_classes = (
+        IsCompany,
+    )
+
+    def patch(self, request, job_id):
+        if 'jobs' in cache:
+            jobs = cache.get('jobs')
+        else:
+            jobs = Job.actived.all()
+            cache.set('jobs', jobs, timeout=settings.JOBS_TTL_CACHE)
+
+        job = get_object_or_404(jobs, pk=job_id)
+        srz_data = self.serializer_class(data=request.data, instance=job, partial=True)
+        if srz_data.is_valid(raise_exception=True):
+            srz_data.save(
+                company=request.user.company,
+                register_date=datetime.now(),
+            )
+            return Response(data={'message': 'job updated success'}, status=status.HTTP_200_OK)

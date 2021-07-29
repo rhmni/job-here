@@ -45,3 +45,28 @@ class JobRetrieveSerializer(serializers.ModelSerializer):
             'description',
             'register_date',
         )
+
+
+class JobCreateUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Job
+        fields = (
+            'title',
+            'company',
+            'city',
+            'min_salary',
+            'job_type',
+            'category',
+            'techs',
+            'military_status',
+            'min_experience',
+            'gender',
+            'min_degree',
+            'description',
+            'register_date',
+        )
+
+        read_only_fields = (
+            'register_date',
+            'company',
+        )
