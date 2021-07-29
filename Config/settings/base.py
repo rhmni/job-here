@@ -24,6 +24,7 @@ INSTALLED_APPS = [
     'app_company.apps.AppCompanyConfig',
     'app_option.apps.AppOptionConfig',
     'app_job.apps.AppJobConfig',
+    'extensions'
 ]
 
 MIDDLEWARE = [
