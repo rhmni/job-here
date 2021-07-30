@@ -5,8 +5,9 @@ from rest_framework.generics import ListAPIView, GenericAPIView, get_object_or_4
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
+from app_job.models import Job
 from app_job.serializers import JobListSerializer, JobRetrieveSerializer, JobCreateUpdateSerializer
-from extensions.cache_queries import cache_jobs
+from extensions.paginations import StandardPagination
 from permissions import IsCompany
 
 
@@ -16,17 +17,18 @@ class JobListView(ListAPIView):
     """
 
     serializer_class = JobListSerializer
+    pagination_class = StandardPagination
     permission_classes = (
         AllowAny,
     )
 
     def get_queryset(self):
-        return cache_jobs()
+        return Job.actived.all()
 
 
 class JobRetrieveView(GenericAPIView):
     """
-        get job id and show detail of job
+        get job_id and show detail of job
     """
 
     serializer_class = JobRetrieveSerializer
@@ -35,14 +37,14 @@ class JobRetrieveView(GenericAPIView):
     )
 
     def get(self, request, job_id):
-        job = get_object_or_404(cache_jobs(), pk=job_id)
+        job = get_object_or_404(Job.actived, pk=job_id)
         srz_data = self.serializer_class(instance=job)
         return Response(data=srz_data.data, status=status.HTTP_200_OK)
 
 
 class JobCreateView(GenericAPIView):
     """
-        create new job for company users
+        create new job for company
     """
 
     serializer_class = JobCreateUpdateSerializer
@@ -62,7 +64,7 @@ class JobCreateView(GenericAPIView):
 
 class JobUpdateView(GenericAPIView):
     """
-        create new job for company users
+        get job_id and update job by owner company
     """
 
     serializer_class = JobCreateUpdateSerializer
@@ -71,7 +73,7 @@ class JobUpdateView(GenericAPIView):
     )
 
     def patch(self, request, job_id):
-        job = get_object_or_404(cache_jobs(), pk=job_id)
+        job = get_object_or_404(Job.actived, pk=job_id)
         srz_data = self.serializer_class(data=request.data, instance=job, partial=True)
         if srz_data.is_valid(raise_exception=True):
             srz_data.save(

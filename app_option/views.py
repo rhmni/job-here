@@ -5,6 +5,7 @@ from rest_framework.response import Response
 
 from app_option import serializers
 from app_option.models import Technology, City
+from extensions.paginations import StandardPagination
 
 
 class TechnologyListView(GenericAPIView):
@@ -13,7 +14,7 @@ class TechnologyListView(GenericAPIView):
     """
 
     serializer_class = serializers.TechnologyListSerializer
-
+    pagination_class = StandardPagination
     permission_classes = (
         AllowAny,
     )
@@ -30,7 +31,7 @@ class CityListView(GenericAPIView):
     """
 
     serializer_class = serializers.TechnologyListSerializer
-
+    pagination_class = StandardPagination
     permission_classes = (
         AllowAny,
     )

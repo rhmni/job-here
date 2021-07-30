@@ -9,7 +9,7 @@ from permissions import IsEmployee
 
 class RetrieveEmployeeView(GenericAPIView):
     """
-        show data of employee for himself
+        show profile of employee
     """
 
     serializer_class = serializers.RetrieveUpdateEmployeeSerializer
@@ -25,7 +25,7 @@ class RetrieveEmployeeView(GenericAPIView):
 
 class UpdateEmployeeView(GenericAPIView):
     """
-        update employee data
+        update profile of employee
     """
 
     serializer_class = serializers.RetrieveUpdateEmployeeSerializer

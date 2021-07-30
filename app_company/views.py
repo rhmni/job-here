@@ -9,7 +9,7 @@ from permissions import IsCompany
 
 class RetrieveCompanyView(GenericAPIView):
     """
-        show data of company for founder
+        show profile of company
     """
 
     serializer_class = serializers.RetrieveUpdateCompanySerializer
@@ -25,7 +25,7 @@ class RetrieveCompanyView(GenericAPIView):
 
 class UpdateCompanyView(GenericAPIView):
     """
-        update company data
+        update profile of company
     """
 
     serializer_class = serializers.RetrieveUpdateCompanySerializer
@@ -62,7 +62,7 @@ class TechnologyAddView(GenericAPIView):
 
 class TechnologyDeleteView(GenericAPIView):
     """
-        delete one or more technology from employee
+        delete one or more technology from company
     """
 
     serializer_class = TechnologyAddDeleteSerializer
