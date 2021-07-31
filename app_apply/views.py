@@ -5,7 +5,7 @@ from rest_framework.generics import GenericAPIView, get_object_or_404
 from rest_framework.response import Response
 
 from app_apply.models import Apply
-from app_apply.serializers import ApplyForJobSerializers
+from app_apply.serializers import ApplyForJobSerializer
 from app_job.models import Job
 from permissions import IsEmployee
 
@@ -14,7 +14,7 @@ class ApplyForJobView(GenericAPIView):
     """
         apply for job by employee user
     """
-    serializer_class = ApplyForJobSerializers
+    serializer_class = ApplyForJobSerializer
     permission_classes = (
         IsEmployee,
     )

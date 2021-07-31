@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
+from app_apply.models import Apply
 from app_employee.models import Employee
 from app_option.models import Technology, City
 
@@ -33,3 +34,15 @@ class CityAddDeleteSerializer(serializers.Serializer):
         if len(cities) != City.objects.filter(pk__in=cities).count():
             raise ValidationError('some cities is not exists')
         return cities
+
+
+class ApplyEmployeeRetrieveSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Apply
+        fields = (
+            'job',
+            'description',
+            'cv_file',
+            'status',
+            'register_date',
+        )
