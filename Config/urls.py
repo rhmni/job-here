@@ -11,6 +11,7 @@ urlpatterns = [
     path('employees/', include('app_employee.urls', namespace='employees')),
     path('options/', include('app_option.urls', namespace='options')),
     path('jobs/', include('app_job.urls', namespace='jobs')),
+    path('applys/', include('app_apply.urls', namespace='applys')),
 
     # for doc
     re_path(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
