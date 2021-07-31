@@ -3,7 +3,7 @@ from django.core.cache import cache
 from django.db import models
 
 from app_company.models import Company
-from app_job.managers import ActiveJobsManager
+from app_job.managers import ActiveJobsManager, ObjectsJobManager
 from app_option.models import Category, City, MinSalary, Technology
 
 
@@ -79,14 +79,12 @@ class Job(models.Model):
     description = models.TextField()
     register_date = models.DateTimeField()
     is_expire = models.BooleanField(default=False)
+    is_delete = models.BooleanField(default=False)
+    delete_date = models.DateTimeField(null=True, blank=True)
 
-    objects = models.Manager()
+    objects = ObjectsJobManager()
     actived = ActiveJobsManager()
 
     def __str__(self):
         return self.title
 
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-        jobs = Job.actived.all()
-        cache.set('jobs', jobs, timeout=settings.JOBS_TTL_CACHE)

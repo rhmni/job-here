@@ -8,7 +8,7 @@ from rest_framework.response import Response
 from app_job.models import Job
 from app_job.serializers import JobListSerializer, JobRetrieveSerializer, JobCreateUpdateSerializer
 from extensions.paginations import StandardPagination
-from permissions import IsCompany
+from permissions import IsCompany, IsOwnerOfJob
 
 
 class JobListView(ListAPIView):
@@ -64,16 +64,17 @@ class JobCreateView(GenericAPIView):
 
 class JobUpdateView(GenericAPIView):
     """
-        get job_id and update job by owner company
+        get job_id and update job by owner of company
     """
 
     serializer_class = JobCreateUpdateSerializer
     permission_classes = (
-        IsCompany,
+        IsOwnerOfJob,
     )
 
     def patch(self, request, job_id):
         job = get_object_or_404(Job.actived, pk=job_id)
+        self.check_object_permissions(request, job)
         srz_data = self.serializer_class(data=request.data, instance=job, partial=True)
         if srz_data.is_valid(raise_exception=True):
             srz_data.save(
@@ -81,3 +82,21 @@ class JobUpdateView(GenericAPIView):
                 register_date=datetime.now(),
             )
             return Response(data={'message': 'job updated success'}, status=status.HTTP_200_OK)
+
+
+class JobDeleteView(GenericAPIView):
+    """
+        get job_id and delete job by owner of company
+    """
+
+    permission_classes = (
+        IsOwnerOfJob,
+    )
+
+    def delete(self, request, job_id):
+        job = get_object_or_404(Job.actived, pk=job_id)
+        self.check_object_permissions(request, job)
+        job.is_delete = True
+        job.delete_date = datetime.now()
+        job.save()
+        return Response(data={'message': 'job deleted success'}, status=status.HTTP_200_OK)

@@ -103,7 +103,7 @@ EMAIL_USE_TLS = config('EMAIL_USE_TLS', cast=bool)
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-    )
+    ),
 }
 
 # JWT Config
@@ -130,20 +130,6 @@ REDIS_PORT = config('REDIS_PORT', cast=int, default=6379)
 
 # Redis DB Numbers
 REDIS_CHANGE_EMAIL_DB = 1
-
-# TTL For Cache
-JOBS_TTL_CACHE = 43200  # 12 hours
-
-# Cache Config
-CACHES = {
-    "default": {
-        "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://localhost:6379/0",
-        "OPTIONS": {
-            "CLIENT_CLASS": "django_redis.client.DefaultClient"
-        },
-    }
-}
 
 # Rabbitmq Config
 CELERY_BROKER_URL = config('CELERY_BROKER_URL', default='amqp://guest:guest@localhost')
