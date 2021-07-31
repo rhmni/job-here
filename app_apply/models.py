@@ -31,6 +31,9 @@ class Apply(models.Model):
     def __str__(self):
         return self.job.title
 
+    class Meta:
+        unique_together = ('job', 'employee')
+
     def save(self, *args, **kwargs):
         if not self.pk:
             send_email.delay(
