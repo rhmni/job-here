@@ -5,11 +5,15 @@ from rest_framework.generics import ListAPIView, GenericAPIView, get_object_or_4
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
-from app_job.models import Job
-from app_job.serializers import JobListSerializer, JobRetrieveSerializer, JobCreateUpdateSerializer, \
-    JobRetrieveForCompanySerializer
 from extensions.paginations import StandardPagination
-from permissions import IsCompany, IsOwnerOfJob
+from extensions.permissions import IsCompany, IsOwnerOfJob
+from app_job.models import Job
+from app_job.serializers import (
+    JobListSerializer,
+    JobRetrieveSerializer,
+    JobCreateUpdateSerializer,
+    JobRetrieveForCompanySerializer,
+)
 
 
 class JobListView(ListAPIView):

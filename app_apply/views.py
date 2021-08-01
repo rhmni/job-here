@@ -4,11 +4,15 @@ from rest_framework import status
 from rest_framework.generics import GenericAPIView, get_object_or_404, ListAPIView
 from rest_framework.response import Response
 
-from app_apply.models import Apply
-from app_apply.serializers import ApplyJobSerializer, ApplyListForEmployeeSerializer, ApplyRetrieveForEmployeeSerializer
-from app_job.models import Job
 from extensions.paginations import StandardPagination
-from permissions import IsEmployee, IsOwnerOfApplyEmployee, IsOwnerOfApplyCompany, IsOwnerOfJob
+from extensions.permissions import IsEmployee, IsOwnerOfApplyEmployee, IsOwnerOfJob
+from app_apply.models import Apply
+from app_job.models import Job
+from app_apply.serializers import (
+    ApplyJobSerializer,
+    ApplyListForEmployeeSerializer,
+    ApplyRetrieveForEmployeeSerializer,
+)
 
 
 class ApplyJobView(GenericAPIView):

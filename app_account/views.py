@@ -4,14 +4,14 @@ from django.conf import settings
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.encoding import force_text
 from django.utils.http import urlsafe_base64_decode
-from rest_framework import status
 
+from rest_framework import status
 from rest_framework.generics import GenericAPIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 import redis
 
-from permissions import IsAnonymoused
+from extensions.permissions import IsAnonymoused
 from app_employee.models import Employee
 from app_company.models import Company
 from app_account.models import User

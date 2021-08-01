@@ -4,7 +4,7 @@ from rest_framework.response import Response
 
 from app_employee import serializers
 from app_option.serializers import TechnologyAddDeleteSerializer
-from permissions import IsEmployee
+from extensions.permissions import IsEmployee
 
 
 class RetrieveEmployeeView(GenericAPIView):

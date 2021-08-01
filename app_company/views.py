@@ -4,7 +4,7 @@ from rest_framework.response import Response
 
 from app_option.serializers import TechnologyAddDeleteSerializer
 from app_company import serializers
-from permissions import IsCompany
+from extensions.permissions import IsCompany
 
 
 class RetrieveCompanyView(GenericAPIView):
