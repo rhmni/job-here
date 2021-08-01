@@ -17,6 +17,7 @@ INSTALLED_APPS = [
     # Third Party Apps
     'rest_framework',
     'drf_yasg',
+    'django_celery_beat',
 
     # Local Apps
     'app_account.apps.AppAccountConfig',
@@ -131,6 +132,9 @@ REDIS_PORT = config('REDIS_PORT', cast=int, default=6379)
 
 # Redis DB Numbers
 REDIS_CHANGE_EMAIL_DB = 1
+
+# Time Of Expire Jobs
+EXPIRE_JOBS_DAY = 31
 
 # Rabbitmq Config
 CELERY_BROKER_URL = config('CELERY_BROKER_URL', default='amqp://guest:guest@localhost')
