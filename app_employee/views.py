@@ -1,13 +1,10 @@
 from rest_framework import status
-from rest_framework.generics import GenericAPIView, get_object_or_404
+from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 
-from app_apply.models import Apply
-from app_apply.serializers import ApplyListSerializer
 from app_employee import serializers
 from app_option.serializers import TechnologyAddDeleteSerializer
-from extensions.paginations import StandardPagination
-from permissions import IsEmployee, IsOwnerOfApplyEmployee
+from permissions import IsEmployee
 
 
 class RetrieveEmployeeView(GenericAPIView):
@@ -118,38 +115,3 @@ class CityDeleteView(GenericAPIView):
             cities = srz_data.validated_data['cities']
             employee.cities_for_work.remove(*cities)
             return Response({'message': 'deleted success'}, status=status.HTTP_200_OK)
-
-
-class ApplyListView(GenericAPIView):
-    """
-        return all apply of employee user
-    """
-
-    serializer_class = ApplyListSerializer
-    pagination_class = StandardPagination
-    permission_classes = (
-        IsEmployee,
-    )
-
-    def get(self, request):
-        applys = Apply.objects.filter(employee=request.user.employee)
-        srz_data = self.serializer_class(instance=applys, many=True)
-        return Response(data=srz_data.data, status=status.HTTP_200_OK)
-
-
-class ApplyRetrieveEmployeeView(GenericAPIView):
-    """
-        get apply_id and return it for owner
-    """
-
-    serializer_class = serializers.ApplyEmployeeRetrieveSerializer
-    pagination_class = StandardPagination
-    permission_classes = (
-        IsOwnerOfApplyEmployee,
-    )
-
-    def get(self, request, apply_id):
-        apply = get_object_or_404(Apply, pk=apply_id)
-        self.check_object_permissions(request, apply)
-        srz_data = self.serializer_class(instance=apply)
-        return Response(data=srz_data.data, status=status.HTTP_200_OK)

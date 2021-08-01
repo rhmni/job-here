@@ -70,3 +70,26 @@ class JobCreateUpdateSerializer(serializers.ModelSerializer):
             'register_date',
             'company',
         )
+
+
+class JobRetrieveForCompanySerializer(serializers.ModelSerializer):
+    techs = TechnologyNestedSerializer(many=True)
+
+    class Meta:
+        model = Job
+        fields = (
+            'pk',
+            'title',
+            'city',
+            'min_salary',
+            'job_type',
+            'category',
+            'techs',
+            'military_status',
+            'min_experience',
+            'gender',
+            'min_degree',
+            'description',
+            'register_date',
+            'is_expire',
+        )

@@ -60,3 +60,17 @@ class IsOwnerOfApplyEmployee(BasePermission):
 
     def has_object_permission(self, request, view, obj):
         return bool(obj.employee == request.user.employee)
+
+
+class IsOwnerOfApplyCompany(BasePermission):
+    """
+        Allow access only employee that is owner of apply
+    """
+
+    message = 'permission denied, you not owner of job'
+
+    def has_permission(self, request, view):
+        return bool(request.user.is_authenticated and request.user.is_active and request.user.is_company)
+
+    def has_object_permission(self, request, view, obj):
+        return bool(obj.company == request.user.company)

@@ -6,14 +6,15 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
 from app_job.models import Job
-from app_job.serializers import JobListSerializer, JobRetrieveSerializer, JobCreateUpdateSerializer
+from app_job.serializers import JobListSerializer, JobRetrieveSerializer, JobCreateUpdateSerializer, \
+    JobRetrieveForCompanySerializer
 from extensions.paginations import StandardPagination
 from permissions import IsCompany, IsOwnerOfJob
 
 
 class JobListView(ListAPIView):
     """
-        show list of active jobs
+        return list of active jobs for all users
     """
 
     serializer_class = JobListSerializer
@@ -28,7 +29,7 @@ class JobListView(ListAPIView):
 
 class JobRetrieveView(GenericAPIView):
     """
-        get job_id and show detail of job
+        get job_id and show detail of job for all users
     """
 
     serializer_class = JobRetrieveSerializer
@@ -42,7 +43,7 @@ class JobRetrieveView(GenericAPIView):
         return Response(data=srz_data.data, status=status.HTTP_200_OK)
 
 
-class JobCreateView(GenericAPIView):
+class JobCreateForCompanyView(GenericAPIView):
     """
         create new job for company
     """
@@ -62,7 +63,7 @@ class JobCreateView(GenericAPIView):
             return Response(data={'message': 'job created success'}, status=status.HTTP_200_OK)
 
 
-class JobUpdateView(GenericAPIView):
+class JobUpdateForCompanyView(GenericAPIView):
     """
         get job_id and update job by owner of company
     """
@@ -84,7 +85,7 @@ class JobUpdateView(GenericAPIView):
             return Response(data={'message': 'job updated success'}, status=status.HTTP_200_OK)
 
 
-class JobDeleteView(GenericAPIView):
+class JobDeleteForCompanyView(GenericAPIView):
     """
         get job_id and delete job by owner of company
     """
@@ -94,9 +95,41 @@ class JobDeleteView(GenericAPIView):
     )
 
     def delete(self, request, job_id):
-        job = get_object_or_404(Job.actived, pk=job_id)
+        job = get_object_or_404(Job.objects, pk=job_id)
         self.check_object_permissions(request, job)
         job.is_delete = True
         job.delete_date = datetime.now()
         job.save()
         return Response(data={'message': 'job deleted success'}, status=status.HTTP_200_OK)
+
+
+class JobListForCompanyView(ListAPIView):
+    """
+        return list of jobs for company
+    """
+
+    serializer_class = JobListSerializer
+    pagination_class = StandardPagination
+    permission_classes = (
+        IsCompany,
+    )
+
+    def get_queryset(self):
+        return Job.objects.filter(company=self.request.user.company)
+
+
+class JobRetrieveForCompanyView(GenericAPIView):
+    """
+        get job_id and return detail of job for company
+    """
+
+    serializer_class = JobRetrieveForCompanySerializer
+    permission_classes = (
+        IsOwnerOfJob,
+    )
+
+    def get(self, request, job_id):
+        job = get_object_or_404(Job.objects, pk=job_id)
+        self.check_object_permissions(request, job)
+        srz_data = self.serializer_class(instance=job)
+        return Response(data=srz_data.data, status=status.HTTP_200_OK)

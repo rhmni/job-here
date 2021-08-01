@@ -1,11 +1,9 @@
 from rest_framework import serializers
-from rest_framework.exceptions import ValidationError
 
 from app_company.models import Company
-from app_option.models import Technology
 
 
-class RetrieveUpdateCompanySerializer(serializers.ModelSerializer):
+class CompanyRetrieveUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Company
         fields = (

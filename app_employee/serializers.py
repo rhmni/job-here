@@ -3,7 +3,7 @@ from rest_framework.exceptions import ValidationError
 
 from app_apply.models import Apply
 from app_employee.models import Employee
-from app_option.models import Technology, City
+from app_option.models import City
 
 
 class RetrieveUpdateEmployeeSerializer(serializers.ModelSerializer):
@@ -36,13 +36,3 @@ class CityAddDeleteSerializer(serializers.Serializer):
         return cities
 
 
-class ApplyEmployeeRetrieveSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Apply
-        fields = (
-            'job',
-            'description',
-            'cv_file',
-            'status',
-            'register_date',
-        )

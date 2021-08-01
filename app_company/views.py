@@ -12,7 +12,7 @@ class RetrieveCompanyView(GenericAPIView):
         show profile of company
     """
 
-    serializer_class = serializers.RetrieveUpdateCompanySerializer
+    serializer_class = serializers.CompanyRetrieveUpdateSerializer
 
     permission_classes = (
         IsCompany,
@@ -28,7 +28,7 @@ class UpdateCompanyView(GenericAPIView):
         update profile of company
     """
 
-    serializer_class = serializers.RetrieveUpdateCompanySerializer
+    serializer_class = serializers.CompanyRetrieveUpdateSerializer
 
     permission_classes = (
         IsCompany,
@@ -77,3 +77,14 @@ class TechnologyDeleteView(GenericAPIView):
             techs = srz_data.validated_data['techs']
             company.technologies.remove(*techs)
             return Response({'message': 'deleted success'}, status=status.HTTP_200_OK)
+
+
+
+
+
+
+
+
+
+
+
