@@ -137,3 +137,21 @@ class JobRetrieveForCompanyView(GenericAPIView):
         self.check_object_permissions(request, job)
         srz_data = self.serializer_class(instance=job)
         return Response(data=srz_data.data, status=status.HTTP_200_OK)
+
+
+class SimilarJobsView(GenericAPIView):
+    """
+        get job_id and return list of 5 similar jobs
+    """
+
+    serializer_class = JobListSerializer
+    permission_classes = (
+        AllowAny,
+    )
+
+    def get(self, request, job_id):
+        job = get_object_or_404(Job.actived, pk=job_id)
+        tech_ids = job.techs.values_list('pk', flat=True)
+        jobs = Job.actived.filter(techs__pk__in=tech_ids).exclude(pk=job.pk)[:5]
+        srz_data = self.serializer_class(instance=jobs, many=True)
+        return Response(data=srz_data.data, status=status.HTTP_200_OK)
