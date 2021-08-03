@@ -1,10 +1,12 @@
 from datetime import datetime
 
+from django_filters import rest_framework as filters
 from rest_framework import status
 from rest_framework.generics import ListAPIView, GenericAPIView, get_object_or_404
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
+from extensions.filters import JobFilter
 from extensions.paginations import StandardPagination, SmalPagination
 from extensions.permissions import IsCompany, IsOwnerOfJob, IsEmployee
 from app_job.models import Job
@@ -23,6 +25,10 @@ class JobListView(ListAPIView):
 
     serializer_class = JobListSerializer
     pagination_class = StandardPagination
+    filterset_class = JobFilter
+    filter_backends = (
+        filters.DjangoFilterBackend,
+    )
     permission_classes = (
         AllowAny,
     )

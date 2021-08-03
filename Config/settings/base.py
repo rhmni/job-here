@@ -18,6 +18,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'drf_yasg',
     'django_celery_beat',
+    'django_filters',
 
     # Local Apps
     'app_account.apps.AppAccountConfig',
