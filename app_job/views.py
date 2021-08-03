@@ -5,8 +5,8 @@ from rest_framework.generics import ListAPIView, GenericAPIView, get_object_or_4
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
-from extensions.paginations import StandardPagination
-from extensions.permissions import IsCompany, IsOwnerOfJob
+from extensions.paginations import StandardPagination, SmalPagination
+from extensions.permissions import IsCompany, IsOwnerOfJob, IsEmployee
 from app_job.models import Job
 from app_job.serializers import (
     JobListSerializer,
@@ -155,3 +155,19 @@ class SimilarJobsView(GenericAPIView):
         jobs = Job.actived.filter(techs__pk__in=tech_ids).exclude(pk=job.pk)[:5]
         srz_data = self.serializer_class(instance=jobs, many=True)
         return Response(data=srz_data.data, status=status.HTTP_200_OK)
+
+
+class RecommendJobsView(ListAPIView):
+    """
+        return list of recommend jobs for employee
+    """
+
+    serializer_class = JobListSerializer
+    pagination_class = SmalPagination
+    permission_classes = (
+        IsEmployee,
+    )
+
+    def get_queryset(self):
+        tech_ids = self.request.user.employee.techs_for_work.values_list('pk', flat=True)
+        return Job.actived.filter(techs__pk__in=tech_ids)

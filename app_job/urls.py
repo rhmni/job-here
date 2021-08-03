@@ -6,7 +6,8 @@ from app_job import views
 app_name = 'jobs'
 urlpatterns = [
     path('', views.JobListView.as_view(), name='list'),
-    path('similar/<int:job_id>/', views.SimilarJobsView.as_view(), name='list'),
+    path('similar/<int:job_id>/', views.SimilarJobsView.as_view(), name='similar_list'),
+    path('employee/recommend/', views.RecommendJobsView.as_view(), name='recommend_list'),
     path('company/', views.JobListForCompanyView.as_view(), name='company_list'),
     path('company/<int:job_id>/', views.JobRetrieveForCompanyView.as_view(), name='company_retrieve'),
     path('company/create/', views.JobCreateForCompanyView.as_view(), name='create'),
